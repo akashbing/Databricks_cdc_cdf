@@ -1,0 +1,47 @@
+# ─── terraform.tfvars ────────────────────────────────────────────────────────
+# Copy this file to terraform.tfvars and fill in your values.
+# Never commit terraform.tfvars with real passwords to source control!
+
+# ── General ───────────────────────────────────────────────────────────────────
+aws_region   = "us-east-1"
+project_name = "cdc-pipeline"
+environment  = "dev"
+owner        = "data-engineering"
+
+# ── Networking ────────────────────────────────────────────────────────────────
+# Leave empty to create a new VPC, or supply existing IDs:
+vpc_id             = ""
+vpc_cidr           = "10.0.0.0/16"
+private_subnet_ids = []
+availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c"]
+
+# ── Source Database ───────────────────────────────────────────────────────────
+db_host     = "my-rds-cluster.cluster-abc123.us-east-1.rds.amazonaws.com"
+db_port     = 5432
+db_name     = "myapp"
+db_username = "debezium_user"
+db_password = "CHANGE_ME_USE_ENV_VAR"   # export TF_VAR_db_password=...
+db_tables   = "public.orders,public.customers,public.products"
+
+debezium_server_name = "dbserver1"
+
+# ── MSK ───────────────────────────────────────────────────────────────────────
+msk_kafka_version        = "3.5.1"
+msk_broker_instance_type = "kafka.m5.large"
+msk_broker_count         = 3
+msk_broker_storage_gb    = 100
+
+# ── Glue ──────────────────────────────────────────────────────────────────────
+glue_worker_type         = "G.2X"
+glue_number_of_workers   = 4
+glue_timeout_minutes     = 2880
+glue_max_concurrent_runs = 1
+glue_spark_ui_enabled    = true
+
+# ── Target ────────────────────────────────────────────────────────────────────
+target_table_format = "delta"
+enable_glue_catalog = true
+glue_database_name  = "cdc_output"
+
+# ── Alerting ──────────────────────────────────────────────────────────────────
+alert_email = "your-team@company.com"   # Leave empty to disable
